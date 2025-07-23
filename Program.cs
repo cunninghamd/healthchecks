@@ -25,6 +25,12 @@ builder.Services.AddHealthChecks()
         name: "localhost",
         failureStatus: HealthStatus.Unhealthy,
         tags: new[] { "localhost" }
+    )
+    .AddUrlGroup(
+        new Uri("http://localhost:5020/weatherforecast"),
+        name: "weatherforecast",
+        failureStatus: HealthStatus.Unhealthy,
+        tags: new[] { "weatherforecast" }
     );
 
 builder.Services.AddHealthChecksUI(options =>
@@ -35,6 +41,7 @@ builder.Services.AddHealthChecksUI(options =>
 
         options.AddHealthCheckEndpoint("nosleep", "/health-nosleep");
         options.AddHealthCheckEndpoint("localhost", "/health-localhost");
+        options.AddHealthCheckEndpoint("weatherforecast", "/health-weatherforecast");
 })
 .AddInMemoryStorage();
 
@@ -48,6 +55,11 @@ app.MapHealthChecks("/health-nosleep", new HealthCheckOptions()
 app.MapHealthChecks("/health-localhost", new HealthCheckOptions()
 {
     Predicate = r => r.Tags.Contains("localhost"),
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
+});
+app.MapHealthChecks("/health-weatherforecast", new HealthCheckOptions()
+{
+    Predicate = r => r.Tags.Contains("weatherforecast"),
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
 });
 
