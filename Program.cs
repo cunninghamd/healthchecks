@@ -63,7 +63,7 @@ app.MapHealthChecks("/health-weatherforecast", new HealthCheckOptions()
     ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse,
 });
 
-app.MapHealthChecksUI(options => options.UIPath = "/health-ui");
+app.MapHealthChecksUI(options => options.UIPath = "/ui");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
